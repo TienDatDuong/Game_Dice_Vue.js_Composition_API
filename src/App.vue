@@ -106,6 +106,7 @@ body {
   background-image: url("~@/assets/back.jpg");
   background-size: cover;
   background-position: center;
+  font-family: Lato;
   font-weight: 300;
   position: relative;
   height: 100vh;

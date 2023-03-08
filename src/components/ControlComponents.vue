@@ -41,6 +41,7 @@ const newGame=() => {
   transform: translateX(-50%);
   color: #555;
   background: none;
+  font-family: Lato;
   border: none;
   font-size: 20px;
   text-transform: uppercase;

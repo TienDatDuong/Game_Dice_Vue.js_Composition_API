@@ -60,6 +60,7 @@ const props = defineProps({
   text-align: center;
   line-height: 120px;
   font-size: 100px;
+  font-size: 0;
   color: #42b983;
   transition: all 0.3s ease;
   opacity: 1;
