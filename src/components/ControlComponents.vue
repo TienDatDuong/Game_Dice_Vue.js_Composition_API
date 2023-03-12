@@ -10,15 +10,32 @@
       <i class="ion-ios-download-outline"></i>Hold
     </button>
 
-    <input type="number" placeholder="Final score" class="final-score" />
+    <input
+        :disabled="props.isPlaying"
+        type="number" placeholder="Final score" class="final-score"
+        :value="props.fineScore"
+        @input="emit('fineScore',$event.target.value)"
+    />
   </div>
 </template>
 
 <script setup>
-import {defineEmits} from 'vue'
+import {defineEmits, defineProps} from 'vue'
 
 
-const emit = defineEmits(['handleNewGame','handleDice','handleHoleDice'])
+const props = defineProps({
+  fineScore:{
+    type: Number,
+    default: 1000
+  },
+  isPlaying:{
+    type: Boolean,
+    default: false
+  }
+})
+
+const emit = defineEmits(['handleNewGame','handleDice','handleHoleDice','fineScore'])
+
 
 const handleHoldice = () => {
   emit('handleHoleDice')

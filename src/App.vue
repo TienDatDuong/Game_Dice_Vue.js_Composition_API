@@ -1,11 +1,15 @@
 <template>
   <div class="wrapper clearfix">
     <players-component
+        :isWinner="isWinner"
         :scorePlayer="scorePlayer"
         :activePlayer="activePlayer"
         :currentStore="currentStore"
     />
     <ControlComponent
+        :isPlaying="isPlaying"
+        :fineScore="fineScore"
+        @fineScore="changeFineScore"
     @handleNewGame="handleNewGame"
     @handleDice="handleDice"
     @handleHoleDice="handleHoleDice"
@@ -20,14 +24,26 @@ import PlayersComponent from "./components/PlayersComponent.vue";
 import ControlComponent from "./components/ControlComponents.vue";
 import DiceComponsnets from "./components/DiceComponsnets.vue";
 import PopupComponent from "./components/PopupComponent"
-import { ref} from "vue";
+import {computed, ref} from "vue";
 
-const isPlaying = ref(false)
+let isPlaying = ref(false)
 let isOpenPopup = ref(false)
 let scorePlayer = ref([13,30])
 const activePlayer = ref(0)
 const currentStore = ref(30)
 let dice = ref([1,5])
+const cloneDataScore = ref([])
+let fineScore = ref(100)
+
+const isWinner = computed(()=>{
+      if(scorePlayer.value[activePlayer.value] >= fineScore.value && isPlaying.value === true){
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        isPlaying.value = false
+        return true
+      }else {
+        return false
+      }
+})
 
 const confirm = () => {
   isPlaying.value = true
@@ -38,15 +54,19 @@ const confirm = () => {
   dice.value = [6,6]
 }
 
+const changeFineScore = (e) =>{
+  fineScore.value = e
+}
+
 const handleHoleDice = () => {
  if(isPlaying.value){
-   console.log('1111')
    const oldScore = scorePlayer.value[activePlayer.value]
-   const cloneDataScore = [...scorePlayer.value]
-   cloneDataScore.value[activePlayer] = oldScore + currentStore.value
-   console.log('cloneDataScore',cloneDataScore)
-   console.log('cloneDataScore[activePlayer]', cloneDataScore[activePlayer])
+    cloneDataScore.value = [...scorePlayer.value]
+   cloneDataScore.value[activePlayer.value] = oldScore + currentStore.value
    scorePlayer.value = cloneDataScore.value
+   if (!isWinner.value){
+   changeUser()
+   }
  }else {
    alert('Vui lòng nhấn bắt đầu')
  }
@@ -66,18 +86,17 @@ const handleDice = () => {
     dice.value = [dice1,dice2]
     const startCount = currentStore.value +  dice1 + dice2
     currentStore.value = startCount
-
-    if(dice1 === 1 || dice2 === 1){
-      setTimeout(()=>{
-        alert(`người chơi số ${activePlayer.value + 1} đã quay vào số 1 `)
-        changeUser()
-      },10)
-
-    }
-
+    setTimeout(()=>{
+        if(dice1 === 1 || dice2 === 1){
+          currentStore.value = 0
+          alert(`người chơi số ${activePlayer.value + 1} đã quay vào số 1 `)
+          changeUser()
+        }
+    },10)
   }else {
     alert('Vui lòng nhấn bắt đầu')
   }
+
 }
 
 const handleNewGame = () => {

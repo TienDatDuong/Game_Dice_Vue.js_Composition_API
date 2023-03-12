@@ -1,19 +1,20 @@
 <template>
   <div>
-    <div class="player-panel " :class="{active : activePlayer == 0}">
-      <div class="player-name">Winner</div>
-      <div class="player-score">{{ scorePlayer[0] }}</div>
+    <div class="player-panel "
+         :class="{active : props.activePlayer == 0 && !isWinner}">
+      <div class="player-name">{{ userWinner(0) }}</div>
+      <div class="player-score">{{ props.scorePlayer[0] }}</div>
       <div class="player-current-box">
         <div class="player-current-label">Current</div>
-        <div class="player-current-score">{{activePlayer == 0 ? currentStore : 0}}</div>
+        <div class="player-current-score">{{props.activePlayer == 0 ? props.currentStore : 0}}</div>
       </div>
     </div>
-    <div class="player-panel"  :class="{active : activePlayer == 1}">
-      <div class="player-name">Player 2</div>
-      <div class="player-score">{{ scorePlayer[1] }}</div>
+    <div class="player-panel"  :class="{active : props.activePlayer == 1}">
+      <div class="player-name">{{ userWinner(1) }}</div>
+      <div class="player-score">{{ props.scorePlayer[1] }}</div>
       <div class="player-current-box">
         <div class="player-current-label">Current</div>
-        <div class="player-current-score">{{activePlayer == 1 ? currentStore : 0}}</div>
+        <div class="player-current-score">{{props.activePlayer == 1 ? props.currentStore : 0}}</div>
       </div>
     </div>
   </div>
@@ -21,11 +22,21 @@
 <script setup>
 import defineProps from 'vue'
 
- defineProps({
-  scorePlayer: {type: Array, defaule: [0,0]},
+ const  props = defineProps({
+  scorePlayer: {type: Array, default: ()=>{}},
   activePlayer: {type: Number, default: 0},
-  currentStore:{type: Number, default: 0}
+  currentStore:{type: Number, default: 0},
+   isWinner: { type: Boolean, default: false }
   });
+
+
+const userWinner = ((idx)=>{
+  if (props.isWinner && props.activePlayer == idx){
+    return `Winner`
+  }else {
+    return `Player ${idx + 1}`
+  }
+})
 
 
 </script>
